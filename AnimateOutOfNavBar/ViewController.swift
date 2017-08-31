@@ -9,30 +9,40 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
+@IBAction private func startToastAnimation(_ sender: Any) {
+    
+    let toastView = createToastView()
+    view.addSubview(toastView)
+    animate(toastView: toastView)
+}
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        let animatedViewHeight = CGFloat(100)
-        let widthOfCurrentView = view.frame.width
-        let animatedView = UIView(frame: CGRect(x: 0,
-                                                y: -animatedViewHeight,
-                                                width: widthOfCurrentView,
-                                                height: animatedViewHeight))
-        animatedView.backgroundColor = .red
-        
-        view.addSubview(animatedView)
-        
-        UIView.animate(withDuration: 1.0, animations: {
-            animatedView.transform = animatedView.transform.translatedBy(x: 0, y: animatedViewHeight)
+private func createToastView() -> UIView {
+    // 1.
+    let toastViewHeight = CGFloat(80)
+    let toastView = UIView(frame: CGRect(x: view.frame.origin.x,
+                                         y: -toastViewHeight,
+                                         width: view.frame.width,
+                                         height: toastViewHeight))
+    toastView.backgroundColor = .green
+    return toastView
+}
+
+private func animate(toastView: UIView) {
+    
+    UIView.animate(withDuration: 1.0, animations: {
+        // 2.
+        toastView.transform = toastView.transform
+            .translatedBy(x: 0, y: toastView.frame.height)
+    }, completion: { _ in
+        // 3.
+        UIView.animate(withDuration: 1.0, delay: 1.0, animations: {
+            toastView.transform = .identity
         }, completion: { _ in
-            UIView.animate(withDuration: 1.0, delay: 1.0, animations: {
-                animatedView.transform = CGAffineTransform.identity
-            })
-            
+            // 4.
+            toastView.removeFromSuperview()
         })
-        
-    }
-
+    })
+}
 }
 
